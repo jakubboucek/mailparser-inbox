@@ -4,7 +4,8 @@
     "type": "project",
     "require": {
         "nette/nette": "^2.4",
-        "aws/aws-sdk-php": "^3.26"
+        "aws/aws-sdk-php": "^3.26",
+        "zbateson/mail-mime-parser": "dev-master"
     },
     "license": "proprietary",
     "minimum-stability": "dev"
