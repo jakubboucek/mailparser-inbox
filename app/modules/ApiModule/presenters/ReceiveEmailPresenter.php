@@ -11,11 +11,14 @@ use Nette,
 
 class ReceiveEmailPresenter extends Nette\Application\UI\Presenter
 {
+	private $tempDir;
+
 	private $httpRequest;
 
 	private $processor;
 
-	public function __construct( Nette\Http\IRequest $httpRequest, Model\MailProcessor $processor ) {
+	public function __construct( $tempDir, Nette\Http\IRequest $httpRequest, Model\MailProcessor $processor ) {
+		$this->tempDir = $tempDir;
 		$this->httpRequest = $httpRequest;
 		$this->processor = $processor;
 	}
@@ -55,6 +58,7 @@ class ReceiveEmailPresenter extends Nette\Application\UI\Presenter
 			throw new InvalidMessageException("Empty request body");
 		}
 
+		$this->saveLastSnsNotification( $body );
 
 		try {
 			$notification = Json::decode($body, Json::FORCE_ARRAY);
@@ -74,6 +78,10 @@ class ReceiveEmailPresenter extends Nette\Application\UI\Presenter
 		catch(JsonException $e) {
 			throw new InvalidMessageException("Invalid request, Message has invalid format (JSON)", 1, $e);
 		}
+	}
+
+	private function saveLastSnsNotification( $notification ) {
+		file_put_contents($this->tempDir . '/last-sns-notification.txt', $notification);
 	}
 }
 

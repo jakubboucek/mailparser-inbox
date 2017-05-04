@@ -26,3 +26,4 @@ services:
 	router: App\RouterFactory::createRouter
 	aws: App\Aws\Aws(%aws.sdk%)
 	s3: App\Aws\S3Storage(%aws.s3Storage%)
+	- App\ApiModule\Presenters\ReceiveEmailPresenter(%tempDir%)
