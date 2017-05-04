@@ -94,4 +94,10 @@ class S3Object {
 		}
 		return $this;
 	}
+
+	public function setFileName( $fileName, $forDownload = FALSE ) {
+		$disposition = $forDownload ? 'attachment' : 'inline';
+
+		$this->data[ 'ContentDisposition' ] = "$disposition; filename=\"$fileName\"";
+	}
 }
