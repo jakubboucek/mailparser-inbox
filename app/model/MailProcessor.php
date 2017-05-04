@@ -109,4 +109,9 @@ class MailProcessor  {
 
 		return $default;
 	}
+
+	public function getEmails() {
+		$selection = $this->db->table( self::TABLE_MESSAGES )->order('date DESC');
+		return $selection;
+	}
 }
