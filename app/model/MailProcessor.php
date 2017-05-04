@@ -33,7 +33,7 @@ class MailProcessor  {
 	public function importMessage( $mimeString, $mimeOriginalPath = NULL ) {
 		$message = ParserMessage::from( $mimeString );
 
-		$messageRow = $this->saveMessage($message);
+		$messageRow = $this->saveMessage($message, $mimeOriginalPath);
 
 	}
 
@@ -44,8 +44,8 @@ class MailProcessor  {
 			'date' => new \DateTime($message->getHeaderValue('date')),
 			'from' => $message->getHeaderValue('from'),
 			'subject' => $message->getHeaderValue('subject'),
-			'body_text' => $message->getTextPart()->getContent(),
-			'body_html' => $message->getHtmlPart()->getContent(),
+			'body_text' => $message->getTextPartCount() ? $message->getTextPart()->getContent() : NULL,
+			'body_html' => $message->getHtmlPartCount() ? $message->getHtmlPart()->getContent() : NULL,
 			'headers' => $this->serializeHeaders( $message->getHeaders() ),
 			'mime_source_url' => $this->s3->path2Url( $mimeOriginalPath ),
 		];
