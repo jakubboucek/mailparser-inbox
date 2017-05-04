@@ -1,0 +1,5 @@
+.git/
+.gitignore
+/log/*
+/temp/*
+/app/config/config.local.neon
