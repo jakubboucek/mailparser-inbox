@@ -27,7 +27,8 @@ class ReceiveEmailPresenter extends Nette\Application\UI\Presenter
 	public function actionNotify() {
 		try {
 			$notification = $this->getPostNotificationMessage();
-			$mimeOriginalPath = $notification['action']['objectKey'];
+
+			$mimeOriginalPath = $notification['receipt']['action']['objectKey'];
 
 			$mail = $this->processor->fetchMessageFromS3( $mimeOriginalPath );
 
