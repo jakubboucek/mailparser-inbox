@@ -74,7 +74,7 @@ class MailProcessor  {
 
 			$partInformation = [
 				'name' => $name,
-				'content_type' => $part->getHeaderValue( 'content-type' );,
+				'content_type' => $part->getHeaderValue( 'content-type' ),
 				'size' => strlen( $content ),
 				'headers' => $this->serializeHeaders( $part->getHeaders() ),
 				'content_url' => $url,
