@@ -13,15 +13,22 @@ class ReceiveEmailPresenter extends Nette\Application\UI\Presenter
 {
 	private $httpRequest;
 
-	public function __construct( Nette\Http\IRequest $httpRequest ) {
+	private $processor;
+
+	public function __construct( Nette\Http\IRequest $httpRequest, Model\MailProcessor $processor ) {
 		$this->httpRequest = $httpRequest;
+		$this->processor = $processor;
 	}
 
 
 	public function actionNotify() {
 		try {
-			$message = $this->getPostMessage();
-			Debugger::log($message);
+			$notification = $this->getPostNotificationMessage();
+			$mimeOriginalPath = $notification['action']['objectKey'];
+
+			$mail = $this->processor->fetchMessageFromS3( $mimeOriginalPath );
+
+			$this->processor->importMessage( $mail, $mimeOriginalPath );
 
 			$this->getPresenter()->sendResponse( new JsonResponse( [
 				'status'=>'OK'
@@ -36,7 +43,7 @@ class ReceiveEmailPresenter extends Nette\Application\UI\Presenter
 		}
 	}
 
-	private function getPostMessage() {
+	private function getPostNotificationMessage() {
 		if($this->httpRequest->getMethod() != Nette\Http\IRequest::POST) {
 			$method = $this->httpRequest->getMethod();
 			throw new InvalidMessageException("Invalid request method ($method), expected POST");
