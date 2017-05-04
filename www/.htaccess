@@ -12,11 +12,13 @@ Allow from all
 	# RewriteBase /
 
 	# prevents files starting with dot to be viewed by browser
+	RewriteRule ^db adminer.php [L,QSA,NE]
 	RewriteRule /\.|^\.(?!well-known/) - [F]
 
 	# front controller
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} !^/adminer
 	RewriteRule !\.(pdf|js|ico|gif|jpg|png|css|rar|zip|tar\.gz|map)$ index.php [L]
 </IfModule>
 
