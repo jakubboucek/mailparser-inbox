@@ -1,6 +1,16 @@
 parameters:
-
-
+	aws:
+		sdk:
+			#arn:aws:iam::667215285126:user/cortis-test-inbox
+			version: latest
+			region: eu-west-1
+			credentials:
+				key: 'AKIAJH3CSB2UKKF37XBA'
+				secret: 'put_your_key'
+		s3Storage:
+			bucket: cortis-inbox
+			basePath: ''
+			baseUrl: https://s3-eu-west-1.amazonaws.com/cortis-inbox
 application:
 	errorPresenter: Error
 	mapping:
@@ -12,4 +22,7 @@ session:
 
 
 services:
+	- App\Model\MailProcessor
 	router: App\RouterFactory::createRouter
+	aws: App\Aws\Aws(%aws.sdk%)
+	s3: App\Aws\S3Storage(%aws.s3Storage%)
