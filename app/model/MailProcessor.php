@@ -111,7 +111,13 @@ class MailProcessor  {
 	}
 
 	public function getEmails() {
-		$selection = $this->db->table( self::TABLE_MESSAGES )->order('date DESC');
+		$selection = $this->db->query('
+			SELECT `m`.*, COUNT(`a`.id ) as `attachments`
+			FROM `' . self::TABLE_MESSAGES . '` as `m`
+			LEFT JOIN `' . self::TABLE_ATTACHMENTS . '` as `a` ON m.id = a.message_id
+			GROUP BY `m`.`id`
+			ORDER BY `m`.`date` DESC;
+		');
 		return $selection;
 	}
 }
