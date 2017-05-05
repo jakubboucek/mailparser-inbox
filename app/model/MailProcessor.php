@@ -144,7 +144,15 @@ class MailProcessor  {
 		return $row;
 	}
 
-	public function signUrl( $url ) {
-		return $this->s3->signUrl( $url, '+ 5 minutes' );
+	public function signUrl( $url, $contentTypeOverride = NULL, $contentDispositionOverride = NULL ) {
+		$overrides = [];
+		if( $contentTypeOverride ) {
+			$overrides['ResponseContentType'] = $contentTypeOverride;
+		}
+		if( $contentDispositionOverride ) {
+			$overrides['ResponseContentDisposition'] = $contentDispositionOverride;
+		}
+
+		return $this->s3->signUrl( $url, '+ 5 minutes', $overrides );
 	}
 }

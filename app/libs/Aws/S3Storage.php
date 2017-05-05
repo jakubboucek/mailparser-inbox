@@ -135,14 +135,18 @@ class S3Storage {
 		return ( $this->appConfig[ 'basePath' ] ? $this->appConfig[ 'basePath' ] . '/' : '' ) . ltrim( $path, '/' );
 	}
 
-	public function signUrl( $url, $expiration ) {
+	public function signUrl( $url, $expiration, $overrides = [] ) {
 		$s3 = $this->getS3();
 		$path = $this->url2Path( $url );
 
-		$cmd = $s3->getCommand('GetObject', [
+		$commandParameters = [
 			'Bucket' => $this->appConfig[ 'bucket' ],
 			'Key'    => $this->path2Key( $path ),
-		]);
-		return $this->getS3()->createPresignedRequest($cmd, $expiration)->getUri();
+		];
+
+		$commandParameters += $overrides;
+
+		$cmd = $s3->getCommand( 'GetObject', $commandParameters );
+		return $this->getS3()->createPresignedRequest( $cmd, $expiration )->getUri();
 	}
 }

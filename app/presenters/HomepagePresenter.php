@@ -53,7 +53,8 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		}
 
 		$url = $this->processor->signUrl(
-			$message->mime_source_url
+			$message->mime_source_url,
+			'text/plain'
 		);
 
 		$this->redirectUrl( $url );
