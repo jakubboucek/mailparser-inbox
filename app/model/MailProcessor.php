@@ -48,8 +48,8 @@ class MailProcessor  {
 		$messageInformation = [
 			'mime_message_id' => $message->getHeaderValue('message-id'),
 			'date' => new \DateTime($message->getHeaderValue('date')),
-			'from' => $message->getHeaderValue('from'),
-			'subject' => $message->getHeaderValue('subject'),
+			'from' => $message->getHeaderValue('from', '(unknown)'),
+			'subject' => $message->getHeaderValue('subject', '(no subject)'),
 			'body_text' => $message->getTextPartCount() ? $message->getTextPart()->getContent() : NULL,
 			'body_html' => $message->getHtmlPartCount() ? $message->getHtmlPart()->getContent() : NULL,
 			'headers' => $this->serializeHeaders( $message->getHeaders() ),
