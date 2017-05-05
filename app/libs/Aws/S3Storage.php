@@ -134,4 +134,15 @@ class S3Storage {
 	public function path2Key( $path ) {
 		return ( $this->appConfig[ 'basePath' ] ? $this->appConfig[ 'basePath' ] . '/' : '' ) . ltrim( $path, '/' );
 	}
+
+	public function signUrl( $url, $expiration ) {
+		$s3 = $this->getS3();
+		$path = $this->url2Path( $url );
+
+		$cmd = $s3->getCommand('GetObject', [
+			'Bucket' => $this->appConfig[ 'bucket' ],
+			'Key'    => $this->path2Key( $path ),
+		]);
+		return $this->getS3()->createPresignedRequest($cmd, $expiration)->getUri();
+	}
 }

@@ -1,0 +1,39 @@
+{block content}
+					<h2>Detail emailu</h2>
+					<p><a n:href="default" class="btn btn-primary">« Zpět na přehled e-mailů</a></p>
+					<div id="ls-content">
+						<table class="table">
+							<tr>
+								<th>Odesílatel</th>
+								<td>{$email->from}</td>
+							</tr>
+							<tr>
+								<th>Subject</th>
+								<td>{$email->subject}</td>
+							</tr>
+							<tr>
+								<th>Datum</th>
+								<td>{$email->date}</td>
+							</tr>
+							<tr>
+								<th>Text</th>
+								<td>{$email->body_text|breaklines}</td>
+							</tr>
+							<tr>
+								<th>Přílohy</th>
+								<td>
+									{if}
+									<ol>
+									{foreach $attachments as $attachment}
+										<li><a n:href="downloadAttachment, id=>$attachment->id" target="_blank">{$attachment->name}</a> ({$attachment->size} B)</li>
+									{/foreach}
+									</ol>
+									{else}
+										<small>(bez přiloh)</small>
+									{/if isset($attachment)}
+								</td>
+							</tr>
+						</table>
+					</div>
+					<p><a n:href="downloadMessageSource, id=>$email->id" target="_blank">Zdrojový kód zprávy</a></p>
+

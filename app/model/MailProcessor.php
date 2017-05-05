@@ -120,4 +120,31 @@ class MailProcessor  {
 		');
 		return $selection;
 	}
+
+
+	public function getEmail( $id ) {
+		$row = $this->db->table( self::TABLE_MESSAGES )
+			->where( 'id', $id )
+			->fetch();
+		return $row;
+	}
+
+
+	public function getAttachmentsFor( $message_id ) {
+		$selection = $this->db->table( self::TABLE_ATTACHMENTS )
+			->where( 'message_id', $message_id );
+		return $selection;
+	}
+
+
+	public function getAttachment( $id ) {
+		$row = $this->db->table( self::TABLE_ATTACHMENTS )
+			->where( 'id', $id )
+			->fetch();
+		return $row;
+	}
+
+	public function signUrl( $url ) {
+		return $this->s3->signUrl( $url, '+ 5 minutes' );
+	}
 }
