@@ -66,7 +66,7 @@ class MailProcessor  {
 			$path = self::ATTACHMENTS_STORAGE_PATH . '/' . $filename;
 			$name = $this->getMimePartName( $part, $filename );
 			$content = $part->hasContent() ? $part->getContent() : '';
-			$contentType = $this->getMimePartContentType( $part );
+			$contentType = $part->getHeaderValue( 'content-type', 'application/octet-stream' );
 
 			$object = S3Object::createFromString( $content, $contentType );
 			$object->setFileName( $name );
@@ -74,7 +74,7 @@ class MailProcessor  {
 
 			$partInformation = [
 				'name' => $name,
-				'content_type' => $part->getHeaderValue( 'content-type' ),
+				'content_type' => $contentType,
 				'size' => strlen( $content ),
 				'headers' => $this->serializeHeaders( $part->getHeaders() ),
 				'content_url' => $url,
