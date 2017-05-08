@@ -44,10 +44,14 @@ class MailProcessor  {
 	}
 
 	private function saveMessage($message, $mimeOriginalPath = NULL) {
+		$date = new \DateTime( $message->getHeaderValue( 'date', date( 'r' ) ) );
+		// Set timezone to  system TZ (to save to DB)
+		$timezone = new \DateTimeZone( date_default_timezone_get() );
+		$date->setTimeZone($timezone);
 
 		$messageInformation = [
 			'mime_message_id' => $message->getHeaderValue('message-id'),
-			'date' => new \DateTime($message->getHeaderValue('date')),
+			'date' => $date,
 			'from' => $message->getHeaderValue('from', '(unknown)'),
 			'subject' => $message->getHeaderValue('subject', '(no subject)'),
 			'body_text' => $message->getTextPartCount() ? $message->getTextPart()->getContent() : NULL,
