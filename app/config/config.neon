@@ -1,16 +1,16 @@
 parameters:
 	aws:
 		sdk:
-			#arn:aws:iam::667215285126:user/cortis-test-inbox
+			#arn:aws:iam::667215285126:user/mailparser-inbox
 			version: latest
 			region: eu-west-1
 			credentials:
 				key: 'AKIAJH3CSB2UKKF37XBA'
 				secret: 'put_your_key'
 		s3Storage:
-			bucket: cortis-inbox
+			bucket: mailparser-inbox
 			basePath: ''
-			baseUrl: https://s3-eu-west-1.amazonaws.com/cortis-inbox
+			baseUrl: https://s3-eu-west-1.amazonaws.com/mailparser-inbox
 application:
 	errorPresenter: Error
 	mapping:

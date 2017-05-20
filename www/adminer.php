@@ -5,7 +5,7 @@ function adminer_object() {
 	class AdminerSoftware extends Adminer {
 
 		function name() {
-			return 'Cortis';
+			return 'Mail parser test';
 		}
 
 		function permanentLogin() {
@@ -13,11 +13,11 @@ function adminer_object() {
 		}
 
 		function credentials() {
-			return array('localhost', 'cortis-test-ro', 'ZWx8bgCqWFHFcet9ky4P');
+			return array('localhost', 'mailparser-ro', 'ZWx8bgCqWFHFcet9ky4P');
 		}
 
 		function database() {
-			return 'cortis-test';
+			return 'mailparser';
 		}
 
 	}

@@ -1,5 +1,5 @@
 {
-    "name": "jakubboucek/cortis-test-inbox",
+    "name": "jakubboucek/mailparser-inbox",
     "description": "Admission test for new job",
     "type": "project",
     "require": {
