@@ -5,7 +5,7 @@ parameters:
 			version: latest
 			region: eu-west-1
 			credentials:
-				key: 'AKIAJH3CSB2UKKF37XBA'
+				key: 'AKIAJ2XKMY4ZW5GXFQOA'
 				secret: 'put_your_key'
 		s3Storage:
 			bucket: mailparser-inbox
