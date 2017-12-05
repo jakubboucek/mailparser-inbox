@@ -1,6 +1,7 @@
 .git/
 .gitignore
 .rsync-exclude
+.idea
 /log/*
 /temp/*
 /app/config/config.local.neon
