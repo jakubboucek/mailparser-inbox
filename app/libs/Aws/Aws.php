@@ -3,9 +3,11 @@
 namespace App\Aws;
 
 use Aws\Sdk as Sdk,
-	Nette\Object;
+	Nette\SmartObject;
 
-class Aws extends Object {
+class Aws {
+
+    use SmartObject;
 
 	private $awsInstance;
 	private $appConfig;
