@@ -4,7 +4,7 @@
 .idea
 /log/*
 /temp/*
-/app/config/config.local.neon
+/app/Config/config.local.neon
 deploy.sh
 composer.json
 composer.lock
