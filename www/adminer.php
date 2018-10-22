@@ -13,7 +13,7 @@ function adminer_object() {
 		}
 
 		function credentials() {
-			return array('localhost', 'mailparser-ro', 'ZWx8bgCqWFHFcet9ky4P');
+			return array('localhost', 'mailparser-ro', 'qfmioKqxq27nfE8DDktH');
 		}
 
 		function database() {
