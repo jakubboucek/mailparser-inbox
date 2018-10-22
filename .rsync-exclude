@@ -5,3 +5,6 @@
 /log/*
 /temp/*
 /app/config/config.local.neon
+deploy.sh
+composer.json
+composer.lock
