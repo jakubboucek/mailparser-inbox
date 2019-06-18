@@ -3,7 +3,7 @@
     "description": "Admission test for new job",
     "type": "project",
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.3",
         "nette/nette": "^2.4",
         "aws/aws-sdk-php": "^3.26",
         "zbateson/mail-mime-parser": "dev-master"

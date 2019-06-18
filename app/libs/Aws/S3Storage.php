@@ -2,151 +2,182 @@
 
 namespace App\Aws;
 
-use App\Aws\Aws,
-	App\Aws\S3Object;
+use Aws\S3\S3Client;
+use Guzzle\Http\Mimetypes;
+use Nette\InvalidArgumentException;
+use Psr\Http\Message\UriInterface;
 
-class S3Storage {
+class S3Storage
+{
 
-	private $appConfig;
-	private $aws;
+    private $appConfig;
+    private $aws;
 
-	private $_s3;
+    private $_s3;
 
-	public function __construct( $appConfig, Aws $aws ) {
-		$this->appConfig = $appConfig;
-		$this->aws = $aws;
-	}
 
-	public function putObject( $sourceObject, $path ) {
-		if( $sourceObject instanceof S3Object) {
-			$object = $sourceObject->toArray();
-		}
-		else {
-			$object = $sourceObject;
-		}
+    public function __construct(array $appConfig, Aws $aws)
+    {
+        $this->appConfig = $appConfig;
+        $this->aws = $aws;
+    }
 
-		$key = $this->path2Key( $path );
-		$object = $object + array(
-			'Bucket' => $this->appConfig[ 'bucket' ],
-			'Key' => $key,
-		);
 
-		$result = $this->getS3()->putObject( $object );
+    public function putObject($sourceObject, $path): string
+    {
+        if ($sourceObject instanceof S3Object) {
+            $object = $sourceObject->toArray();
+        } else {
+            $object = $sourceObject;
+        }
 
-		return $this->path2Url( $path );
-	}
+        $key = $this->path2Key($path);
+        $object += [
+            'Bucket' => $this->appConfig['bucket'],
+            'Key' => $key,
+        ];
 
-	public function copyObject( $sourceObject, $sourcePath, $path ) {
-		if( $sourceObject instanceof S3Object) {
-			$object = $sourceObject->toArray();
-		}
-		else {
-			$object = $sourceObject;
-		}
+        $result = $this->getS3()->putObject($object);
 
-		$bucket = $this->appConfig[ 'bucket' ];
-		$sourceKey = $this->path2Key( $sourcePath );
-		$key = $this->path2Key( $path );
-		$object = $object + array(
-			'Bucket' => $bucket,
-			'CopySource' => $bucket . '/' . $sourceKey,
-			'Key' => $key,
-		);
+        return $this->path2Url($path);
+    }
 
-		$result = $this->getS3()->copyObject( $object );
 
-		return $this->path2Url( $path );
-	}
+    public function copyObject($sourceObject, $sourcePath, $path): string
+    {
+        if ($sourceObject instanceof S3Object) {
+            $object = $sourceObject->toArray();
+        } else {
+            $object = $sourceObject;
+        }
 
-	public function getObject( $path ) {
-		$key = $this->path2Key( $path );
-		$object = array(
-			'Bucket' => $this->appConfig[ 'bucket' ],
-			'Key' => $key,
-		);
-		$result = $this->getS3()->getObject( $object );
+        $bucket = $this->appConfig['bucket'];
+        $sourceKey = $this->path2Key($sourcePath);
+        $key = $this->path2Key($path);
+        $object += [
+            'Bucket' => $bucket,
+            'CopySource' => $bucket . '/' . $sourceKey,
+            'Key' => $key,
+        ];
 
-		return new S3Object( $result );
-	}
+        $result = $this->getS3()->copyObject($object);
 
-	public function headObject( $path ) {
-		$key = $this->path2Key( $path );
-		$object = array(
-			'Bucket' => $this->appConfig[ 'bucket' ],
-			'Key' => $key,
-		);
-		$result = $this->getS3()->headObject( $object );
+        return $this->path2Url($path);
+    }
 
-		return new S3Object( $result );
-	}
 
-	public function getS3() {
-		if( ! $this->_s3) {
-			$this->_s3 = $this->aws->s3;
-		}
-		return $this->_s3;
-	}
+    public function getObject($path): S3Object
+    {
+        $key = $this->path2Key($path);
+        $object = array(
+            'Bucket' => $this->appConfig['bucket'],
+            'Key' => $key,
+        );
+        $result = $this->getS3()->getObject($object);
 
-	public function getMimeType( $fileName ) {
-		return \Guzzle\Http\Mimetypes::getInstance()->fromFilename( $fileName );
-	}
+        return new S3Object($result);
+    }
 
-	public function listObjects( $path ) {
-		$key = $this->path2key( $path );
 
-		$result = $this->getS3()->ListObjects( array(
-		    'Bucket' => $this->appConfig[ 'bucket' ],
-		    'Prefix' => rtrim( $key, '/') . '/',
-		    'Delimiter' => '/',
-		));
+    public function headObject($path): S3Object
+    {
+        $key = $this->path2Key($path);
+        $object = array(
+            'Bucket' => $this->appConfig['bucket'],
+            'Key' => $key,
+        );
+        $result = $this->getS3()->headObject($object);
 
-		return new S3StorageListResult( $result );
-	}
+        return new S3Object($result);
+    }
 
-	public function isObjectExist( $path ) {
-		$key = $this->path2Key( $path );
-		return $this->getS3()->doesObjectExist( $this->appConfig[ 'bucket' ], $key );
-	}
 
-	public function path2Url( $path ) {
-		return $this->appConfig[ 'baseUrl' ] . '/' . ltrim( $path, '/' );
-	}
+    public function getS3(): S3Client
+    {
+        if (!$this->_s3) {
+            $this->_s3 = $this->aws->getS3();
+        }
+        return $this->_s3;
+    }
 
-	public function url2Path( $url ) {
-		if( ! $this->isValidUrl( $url ) ) {
-			throw new \Nette\InvalidArgumentException( "Object URL is not based on known S3 storage." );
-		}
 
-		$pattern = preg_quote( $this->appConfig[ 'baseUrl' ], '/' );
-		return preg_replace("/^$pattern/", '', $url );
-	}
+    public function getMimeType($fileName)
+    {
+        return Mimetypes::getInstance()->fromFilename($fileName);
+    }
 
-	public function isValidUrl( $url ) {
-		$pattern = preg_quote( $this->appConfig[ 'baseUrl' ], '/' );
-		return preg_match( "/^$pattern/", $url );
-	}
 
-	public function key2Path( $key ) {
-		$pattern = preg_quote( $this->appConfig[ 'basePath' ], '/' );
-		return preg_replace( "/^$pattern/", '', $key );
-	}
+    public function listObjects($path)
+    {
+        $key = $this->path2key($path);
 
-	public function path2Key( $path ) {
-		return ( $this->appConfig[ 'basePath' ] ? $this->appConfig[ 'basePath' ] . '/' : '' ) . ltrim( $path, '/' );
-	}
+        $result = $this->getS3()->ListObjects(array(
+            'Bucket' => $this->appConfig['bucket'],
+            'Prefix' => rtrim($key, '/') . '/',
+            'Delimiter' => '/',
+        ));
 
-	public function signUrl( $url, $expiration, $overrides = [] ) {
-		$s3 = $this->getS3();
-		$path = $this->url2Path( $url );
+        return new S3StorageListResult($result);
+    }
 
-		$commandParameters = [
-			'Bucket' => $this->appConfig[ 'bucket' ],
-			'Key'    => $this->path2Key( $path ),
-		];
 
-		$commandParameters += $overrides;
+    public function isObjectExist($path): bool
+    {
+        $key = $this->path2Key($path);
+        return $this->getS3()->doesObjectExist($this->appConfig['bucket'], $key);
+    }
 
-		$cmd = $s3->getCommand( 'GetObject', $commandParameters );
-		return $this->getS3()->createPresignedRequest( $cmd, $expiration )->getUri();
-	}
+
+    public function path2Url($path): string
+    {
+        return $this->appConfig['baseUrl'] . '/' . ltrim($path, '/');
+    }
+
+
+    public function url2Path($url)
+    {
+        if (!$this->isValidUrl($url)) {
+            throw new InvalidArgumentException('Object URL is not based on known S3 storage.');
+        }
+
+        $pattern = preg_quote($this->appConfig['baseUrl'], '/');
+        return preg_replace("/^$pattern/", '', $url);
+    }
+
+
+    public function isValidUrl($url)
+    {
+        $pattern = preg_quote($this->appConfig['baseUrl'], '/');
+        return preg_match("/^$pattern/", $url);
+    }
+
+
+    public function key2Path($key)
+    {
+        $pattern = preg_quote($this->appConfig['basePath'], '/');
+        return preg_replace("/^$pattern/", '', $key);
+    }
+
+
+    public function path2Key($path): string
+    {
+        return ($this->appConfig['basePath'] ? $this->appConfig['basePath'] . '/' : '') . ltrim($path, '/');
+    }
+
+
+    public function signUrl($url, $expiration, $overrides = []): UriInterface
+    {
+        $s3 = $this->getS3();
+        $path = $this->url2Path($url);
+
+        $commandParameters = [
+            'Bucket' => $this->appConfig['bucket'],
+            'Key' => $this->path2Key($path),
+        ];
+
+        $commandParameters += $overrides;
+
+        $cmd = $s3->getCommand('GetObject', $commandParameters);
+        return $this->getS3()->createPresignedRequest($cmd, $expiration)->getUri();
+    }
 }
