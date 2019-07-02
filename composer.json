@@ -4,10 +4,37 @@
     "type": "project",
     "require": {
         "php": ">=7.3",
-        "nette/nette": "^2.4",
         "aws/aws-sdk-php": "^3.26",
-        "zbateson/mail-mime-parser": "dev-master"
+        "zbateson/mail-mime-parser": "^1.1",
+        "nette/application": "^3.0",
+        "nette/bootstrap": "^3.0",
+        "nette/caching": "^3.0",
+        "nette/component-model": "^3.0",
+        "nette/database": "^3.0",
+        "nette/di": "^3.0",
+        "nette/forms": "^3.0",
+        "nette/http": "^3.0",
+        "nette/mail": "^3.1",
+        "nette/neon": "^3.0",
+        "nette/php-generator": "^3.2",
+        "nette/robot-loader": "^3.2",
+        "nette/safe-stream": "^2.4",
+        "nette/security": "^3.0",
+        "nette/tokenizer": "^3.0",
+        "nette/utils": "^3.0",
+        "latte/latte": "^2.5",
+        "tracy/tracy": "^2.6",
+        "nette/finder": "^2.5"
     },
-    "license": "proprietary",
-    "minimum-stability": "dev"
+    "license": ["MIT"],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "nette/tester": "^2.2"
+    },
+    "autoload": {
+        "files": [
+            "app/Checker.php"
+        ]
+    }
 }

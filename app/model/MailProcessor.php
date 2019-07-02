@@ -14,9 +14,10 @@ use Nette\InvalidArgumentException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nette\Utils\Random;
-use Tracy\Debugger;
+use ZBateson\MailMimeParser\Header\AbstractHeader;
 use ZBateson\MailMimeParser\Message;
-use ZBateson\MailMimeParser\Message\MimePart;
+use ZBateson\MailMimeParser\Message\Part\MessagePart;
+use ZBateson\MailMimeParser\Message\Part\MimePart;
 
 class MailProcessor
 {
@@ -93,7 +94,7 @@ class MailProcessor
             'subject' => $message->getHeaderValue('subject', '(no subject)'),
             'body_text' => $message->getTextPartCount() ? $message->getTextPart()->getContent() : null,
             'body_html' => $message->getHtmlPartCount() ? $message->getHtmlPart()->getContent() : null,
-            'headers' => $this->serializeHeaders($message->getHeaders()),
+            'headers' => $this->serializeHeaders($message->getAllHeaders()),
             'mime_source_url' => $this->s3->path2Url($mimeOriginalPath),
         ];
 
@@ -116,7 +117,7 @@ class MailProcessor
             $path = self::ATTACHMENTS_STORAGE_PATH . '/' . $filename;
             $name = $this->getMimePartName($part, $filename);
             $content = $part->hasContent() ? $part->getContent() : '';
-            $contentType = $part->getHeaderValue('content-type', 'application/octet-stream');
+            $contentType = $part->getContentType('application/octet-stream');
 
             $object = S3Object::createFromString($content, $contentType);
             $object->setFileName($name);
@@ -126,7 +127,7 @@ class MailProcessor
                 'name' => $name,
                 'content_type' => $contentType,
                 'size' => strlen($content),
-                'headers' => $this->serializeHeaders($part->getHeaders()),
+                'headers' => $this->serializeHeaders($part->getAllHeaders()),
                 'content_url' => $url,
             ];
 
@@ -138,7 +139,7 @@ class MailProcessor
 
 
     /**
-     * @param array $headers
+     * @param AbstractHeader[] $headers
      * @return string
      * @throws JsonException
      */
@@ -146,32 +147,21 @@ class MailProcessor
     {
         $rawHeaders = [];
         foreach ($headers as $headerName => $header) {
-            $rawHeaders[$headerName] = $header->getRawValue();
+            $rawHeaders[$header->getName()] = $header->getRawValue();
         }
         return Json::encode($rawHeaders, Json::PRETTY);
     }
 
 
     /**
-     * @param MimePart $mimePart
+     * @param MessagePart $mimePart
      * @param string|null $default
-     * @return string
+     * @return string|null
      */
-    private function getMimePartName(MimePart $mimePart, string $default = null): string
+    private function getMimePartName(MessagePart $mimePart, ?string $default = null): ?string
     {
-        $header = $mimePart->getHeaderParameter('content-disposition', 'filename');
-        Debugger::log($header);
-        if ($header) {
-            return $header;
-        }
-
-        $header = $mimePart->getHeaderValue('content-type', 'name');
-        Debugger::log($header);
-        if ($header) {
-            return $header;
-        }
-
-        return $default;
+        $header = $mimePart->getFilename();
+        return $header ?? $default;
     }
 
 
