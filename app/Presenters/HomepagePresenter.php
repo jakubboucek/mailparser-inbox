@@ -51,7 +51,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
     }
 
 
-    public function actionDownloadMessageSource($id): void
+    public function actionDownloadMessageSource(int $id): void
     {
         $message = $this->processor->getEmail($id);
         if (!$message) {
