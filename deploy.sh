@@ -2,7 +2,7 @@
 
 REMOTE_DIR="/var/www/mailparser.ion.cz/www"
 LOCAL_DIR=""
-SERVER_NAME="mlh"
+SERVER_NAME="rlp"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SSH="ssh ${SERVER_NAME}"
