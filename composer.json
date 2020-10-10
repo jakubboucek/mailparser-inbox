@@ -6,7 +6,7 @@
         "php": ">=7.3",
         "aws/aws-sdk-php": "^3.26",
         "zbateson/mail-mime-parser": "^1.1",
-        "nette/application": "^3.0",
+        "nette/application": "^3.0.6",
         "nette/bootstrap": "^3.0",
         "nette/caching": "^3.0",
         "nette/component-model": "^3.0",
