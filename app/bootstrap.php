@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use JakubBoucek\ComposerVendorChecker\Checker;
+use JakubBoucek\ComposerConsistency\ComposerConsistency;
 use Tracy\Debugger;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $configurator = new Nette\Configurator;
 
-//$configurator->setDebugMode(FALSE); // enable for your remote IP
+//$configurator->setDebugMode(true); // enable for your remote IP
 $configurator->enableTracy(__DIR__ . '/../log', 'pan@jakubboucek.cz');
 
-if (Debugger::$productionMode === false) {
-    Checker::validateReqs(__DIR__ . '/..');
+if (class_exists(ComposerConsistency::class)) {
+    ComposerConsistency::rootDir(__DIR__ . '/..')->validate();
 }
 
 $configurator->setTimeZone('Europe/Prague');

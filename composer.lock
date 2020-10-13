@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b771cdf869533cf5f2bcb6f986d1aafa",
+    "content-hash": "3f5fcc930fa8ae9d273f5a063b9c8e1d",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2128,17 +2128,17 @@
     ],
     "packages-dev": [
         {
-            "name": "jakubboucek/composer-vendor-checker",
-            "version": "dev-master",
+            "name": "jakubboucek/composer-consistency",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jakubboucek/php-composer-vendor-checker.git",
-                "reference": "d1667046fa25b874706acbba061243f65e19fbcf"
+                "url": "https://github.com/jakubboucek/php-composer-consistency.git",
+                "reference": "50f74147dd4b962683b4e646234365119ccffa5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jakubboucek/php-composer-vendor-checker/zipball/d1667046fa25b874706acbba061243f65e19fbcf",
-                "reference": "d1667046fa25b874706acbba061243f65e19fbcf",
+                "url": "https://api.github.com/repos/jakubboucek/php-composer-consistency/zipball/50f74147dd4b962683b4e646234365119ccffa5d",
+                "reference": "50f74147dd4b962683b4e646234365119ccffa5d",
                 "shasum": ""
             },
             "require": {
@@ -2150,7 +2150,8 @@
             },
             "require-dev": {
                 "nette/tester": "^2.3",
-                "phpstan/phpstan": "^0.12.10"
+                "phpstan/phpstan": "^0.12.48",
+                "symplify/easy-coding-standard": "^8.3"
             },
             "type": "library",
             "extra": {
@@ -2173,8 +2174,8 @@
                     "email": "pan@jakubboucek.cz"
                 }
             ],
-            "description": "Checks if the vendor/ directory is consistent with project's composer.lock",
-            "time": "2020-02-16T14:21:41+00:00"
+            "description": "Checks if the vendor/ directory is consistent with the project's composer.lock (direct API, no CLI)",
+            "time": "2020-10-13T22:13:45+00:00"
         },
         {
             "name": "nette/tester",
@@ -2246,9 +2247,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "jakubboucek/composer-vendor-checker": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

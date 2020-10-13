@@ -31,6 +31,6 @@
     "prefer-stable": true,
     "require-dev": {
         "nette/tester": "^2.2",
-        "jakubboucek/composer-vendor-checker": "dev-master"
+        "jakubboucek/composer-consistency": "^2.0"
     }
 }

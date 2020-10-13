@@ -1,30 +1,40 @@
 <?php
 
-function adminer_object() {
+function adminer_object()
+{
+    class AdminerSoftware extends Adminer
+    {
 
-	class AdminerSoftware extends Adminer {
+        public function name()
+        {
+            return 'Mail parser test';
+        }
 
-		function name() {
-			return 'Mail parser test';
-		}
+        public function permanentLogin($g = false)
+        {
+            return "556b6deac3d71be237f8ce115b7c60ac4bbb7297";
+        }
 
-		function permanentLogin() {
-			return "cd29453b374ab1d52718dac89b685f08";
-		}
+        public function credentials()
+        {
+            return ['localhost', 'mailparser-ro', 'qfmioKqxq27nfE8DDktH'];
+        }
 
-		function credentials() {
-			return array('localhost', 'mailparser-ro', 'qfmioKqxq27nfE8DDktH');
-		}
+        function login($login, $password) {
+            // validate user submitted credentials
+            return true;
+        }
 
-		function database() {
-			return 'mailparser';
-		}
+        public function database()
+        {
+            return 'mailparser';
+        }
 
-	}
+    }
 
-	return new AdminerSoftware;
+    return new AdminerSoftware;
 }
-$_GET['username'] = '';
-include "../app/libs/adminer/adminer-4.3.1-mysql-cs.php";
+
+require "../app/libs/adminer/adminer-4.7.7-mysql-cs.php";
 
 

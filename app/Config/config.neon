@@ -6,16 +6,21 @@ parameters:
 			region: eu-west-1
 			credentials:
 				key: 'AKIAJ2XKMY4ZW5GXFQOA'
-				secret: 'put_your_key'
+				secret: PUT_AWS_SECRET_HERE
 		s3Storage:
 			bucket: mailparser-inbox
 			basePath: ''
 			baseUrl: https://s3-eu-west-1.amazonaws.com/mailparser-inbox
+
 application:
 	errorPresenter: Error
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=mailparser;charset=utf8'
+	user: mailparser
+	password: PUT_MYSQL_PASSWORD_HERE
 
 session:
 	expiration: 14 days
